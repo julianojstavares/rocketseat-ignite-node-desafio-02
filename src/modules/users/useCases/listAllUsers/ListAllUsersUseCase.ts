@@ -6,11 +6,29 @@ interface IRequest {
 }
 
 class ListAllUsersUseCase {
+
     constructor(private usersRepository: IUsersRepository) {}
 
     execute({ user_id }: IRequest): User[] {
-        // Complete aqui
+
+        const auth = this.usersRepository.findById(user_id);
+
+        if(!auth) {
+            throw new Error("Admin not informed");
+        }
+        
+        if(!auth.admin) {
+
+            throw new Error("Unauthorized");
+
+        }
+
+        const users = this.usersRepository.list();
+
+        return users;
+
     }
+    
 }
 
 export { ListAllUsersUseCase };
